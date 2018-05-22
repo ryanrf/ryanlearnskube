@@ -1,1 +1,0 @@
-use (gloud_instances.sh)[gcloud_instances.sh] to start/ stop instances. This will save you money. `gcloud_instances.sh start` to start and `gcloud_instances.sh stop` to stop your instances. It will stop all instances in a given project, so be careful!
