@@ -48,21 +48,21 @@ configure_cni(){
 POD_CIDR=$(curl -s -H "Metadata-Flavor: Google" \
   http://metadata.google.internal/computeMetadata/v1/instance/attributes/pod-cidr)
 
-printf '{
-    "cniVersion": "0.3.1",
-    "name": "bridge",
-    "type": "bridge",
-    "bridge": "cnio0",
-    "isGateway": true,
-    "ipMasq": true,
-    "ipam": {
-        "type": "host-local",
-        "ranges": [
-          [{"subnet": "${POD_CIDR}"}]
+printf "{
+    \"cniVersion\": \"0.3.1\",
+    \"name\": \"bridge\",
+    \"type\": \"bridge\",
+    \"bridge\": \"cnio0\",
+    \"isGateway\": true,
+    \"ipMasq\": true,
+    \"ipam\": {
+        \"type\": \"host-local\",
+        \"ranges\": [
+          [{\"subnet\": \"${POD_CIDR}\"}]
         ],
-        "routes": [{"dst": "0.0.0.0/0"}]
+        \"routes\": [{\"dst\": \"0.0.0.0/0\"}]
     }
-}' | sudo tee /etc/cni/net.d/10-bridge.conf
+}" | sudo tee /etc/cni/net.d/10-bridge.conf
 
 printf '{
     "cniVersion": "0.3.1",
@@ -212,7 +212,7 @@ systemd_service kube-proxy
 
 for instance in worker-{0..2}
 do
-	gcloud compute ssh ${instance} --command "$(typeset -f setup); setup"
+	#gcloud compute ssh ${instance} --command "$(typeset -f setup); setup"
 	for service in configure_cni configure_containerd configure_kubelet configure_kubeproxy
 	do
 		gcloud compute ssh ${instance} --command "$(typeset -f systemd_service ${service}); ${service}"
